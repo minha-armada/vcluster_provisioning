@@ -32,7 +32,7 @@ on:
 jobs:
   deploy-vcluster:
     environment: aks
-    runs-on: self-hosted
+    runs-on: [self-hosted, vcluster-bash]
     defaults:
       run:
         shell: bash
@@ -60,7 +60,7 @@ jobs:
       - name: Wait for all pods in vcluster namespace to be ready
         run: |
           kubectl wait --for=condition=Ready pods --all -n $env:NAMESPACE_NAME --timeout=300s
-          
+
 
       - name: Signal Temporal Workflow
         if: success()
