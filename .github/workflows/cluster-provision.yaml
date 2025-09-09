@@ -46,21 +46,21 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
       - name: Create vCluster with resource limits
         run: |
-          helm upgrade --install $env:CLUSTER_NAME `
-            --create-namespace `
-            --set cluster_name=$env:CLUSTER_NAME `
-            --set namespace_name=$env:NAMESPACE_NAME `
-            --set cluster_cpu=$env:CPU `
-            --set cluster_ram=$env:MEMORY `
-            --set cluster_storage=$env:STORAGE `
-            ./armada-vcluster
+          helm upgrade --install "$CLUSTER_NAME" \
+          --create-namespace \
+          --set cluster_name="$CLUSTER_NAME" \
+          --set namespace_name="$NAMESPACE_NAME" \
+          --set cluster_cpu="$CPU" \
+          --set cluster_ram="$MEMORY" \
+          --set cluster_storage="$STORAGE" \
+          ./armada-vcluster
 
       - name: Wait for all pods in vcluster namespace to be ready
         run: |
           kubectl wait --for=condition=Ready pods --all -n $env:NAMESPACE_NAME --timeout=300s
-
 
       - name: Signal Temporal Workflow
         if: success()
