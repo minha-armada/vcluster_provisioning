@@ -29,9 +29,6 @@ spec:
       version: {{ .Values.vcluster_version }}
     values: |-
       sync:
-        toHost:
-            pods:
-              runtimeClassName: kata-clh
         fromHost:
           nodes:
             enabled: true
