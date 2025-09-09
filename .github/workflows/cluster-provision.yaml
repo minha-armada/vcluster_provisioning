@@ -1,0 +1,81 @@
+name: Create vCluster
+on:
+  workflow_dispatch:
+    inputs:
+      cluster_name:
+        description: Name for the cluster
+        required: true
+      namespace_name:
+        description: Name for the namespace
+        required: true
+      cpu:
+        description: CPU limit for vCluster in millicores (e.g. 500)
+        required: true
+        default: 500
+      memory:
+        description: Memory limit for vCluster in Mi (e.g. 512)
+        required: true
+        default: 512
+      storage:
+        description: Persistent storage size in Gi (e.g. 10)
+        required: true
+        default: 10
+      workflow_id:
+        description: Temporal Workflow ID (optional)
+        required: true
+      signal_name:
+        description: Temporal Signal Name (required if workflow_id is set)
+        required: true
+      signal_payload:
+        description: Payload for the Temporal Signal (optional)
+        required: true
+jobs:
+  deploy-vcluster:
+    environment: aks
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      NAMESPACE_NAME: vcluster-${{ github.event.inputs.namespace_name }}
+      KUBECONFIG: ${{ vars.KUBECONFIG }}
+      CLUSTER_NAME: ${{ github.event.inputs.cluster_name }}
+      CPU: ${{ github.event.inputs.cpu }}
+      MEMORY: ${{ github.event.inputs.memory }}
+      STORAGE: ${{ github.event.inputs.storage }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Create vCluster with resource limits
+        run: |
+          helm upgrade --install $env:CLUSTER_NAME `
+            --create-namespace `
+            --set cluster_name=$env:CLUSTER_NAME `
+            --set namespace_name=$env:NAMESPACE_NAME `
+            --set cluster_cpu=$env:CPU `
+            --set cluster_ram=$env:MEMORY `
+            --set cluster_storage=$env:STORAGE `
+            ./armada-vcluster
+
+      - name: Wait for all pods in vcluster namespace to be ready
+        run: |
+          Start-Sleep -Seconds 30
+          kubectl wait --for=condition=Ready pods --all -n $env:NAMESPACE_NAME --timeout=300s
+
+    
+
+      - name: Signal Temporal Workflow
+        if: success()
+        run: |
+          $body = @{
+            workflowId  = "${{ github.event.inputs.workflow_id }}"
+            signalName  = "${{ github.event.inputs.signal_name }}"
+            signalInput = "${{ github.event.inputs.signal_payload }}"
+          } | ConvertTo-Json -Depth 3
+
+          Invoke-RestMethod `
+            -Uri "http://localhost:8080/trigger-signal" `
+            -Method Post `
+            -Body $body `
+            -ContentType "application/json"
+     

@@ -1,0 +1,52 @@
+name: Arc Onboarding
+on:
+  workflow_dispatch:
+    inputs:
+      cluster_name:
+        description: 'Name of the Kubernetes cluster (must match created vCluster)'
+        required: true
+      namespace_name:
+        description: 'Namespace inside the cluster'
+        required: true
+ 
+jobs:
+  deploy-vcluster:
+    environment: aks
+    runs-on: self-hosted
+    defaults:
+      run:
+        shell: pwsh
+    env:
+      CLUSTER_NAME: ${{ github.event.inputs.cluster_name }}
+      NAMESPACE_NAME: ${{ github.event.inputs.namespace_name }}
+      RESOURCE_GROUP: AzureArcVClusterTest
+      LOCATION: WestUS3
+ 
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+ 
+      - name: Apply Azure Arc Namespaces and LimitRange
+        run: |
+          Write-Output "Applying arc-ns.yaml to vCluster..."
+          vcluster connect $env:CLUSTER_NAME -n $env:NAMESPACE_NAME -- kubectl apply -f ./arc-ns
+          Write-Output "Namespace and LimitRange applied in vCluster."
+ 
+      - name: Create Resource Group in Azure (if not exists)
+        run: |
+          Write-Output "Creating Azure resource group '$env:RESOURCE_GROUP'..."
+          az group create `
+            --name $env:RESOURCE_GROUP `
+            --location $env:LOCATION `
+            --output table
+          Write-Output "Azure resource group '$env:RESOURCE_GROUP' ensured."
+ 
+      - name: Connect Kubernetes Cluster to Azure Arc
+        run: |
+          Write-Output "Connecting vCluster to Azure Arc..."
+          vcluster connect $env:CLUSTER_NAME -n $env:NAMESPACE_NAME -- `
+            az connectedk8s connect `
+              --name $env:CLUSTER_NAME `
+              --resource-group $env:RESOURCE_GROUP
+          Write-Output "vCluster successfully connected to Azure Arc."
+ 

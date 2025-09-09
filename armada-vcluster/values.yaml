@@ -1,0 +1,6 @@
+cluster_name: ""
+namespace_name: ""
+vcluster_version: 0.27.0
+cluster_cpu: 500
+cluster_ram: 512
+cluster_storage: 10

@@ -1,0 +1,36 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: azure-arc-release
+    name: azure-arc-release
+  name: azure-arc-release
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    meta.helm.sh/release-name: azure-arc
+    meta.helm.sh/release-namespace: azure-arc-release
+  labels:
+    admission.policy.azure.com/ignore: "true"
+    app.kubernetes.io/managed-by: Helm
+    control-plane: "true"
+    kubernetes.io/metadata.name: azure-arc
+  name: azure-arc
+---
+apiVersion: v1
+kind: LimitRange
+metadata:
+  name: azure-arc
+  namespace: azure-arc
+spec:
+  limits:
+    - default: # this section defines default limits
+        cpu: 100m
+        memory: 128Mi
+      defaultRequest: # this section defines default requests
+        cpu: 100m
+        memory: 128Mi
+      type: Container
+ 
