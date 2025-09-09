@@ -32,7 +32,7 @@ on:
 jobs:
   deploy-vcluster:
     environment: aks
-    runs-on: [self-hosted, vcluster-bash]
+    runs-on: [self-hosted, Linux]
     defaults:
       run:
         shell: bash
