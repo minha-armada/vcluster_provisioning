@@ -74,6 +74,6 @@ jobs:
             '{workflowId: $workflowId, signalName: $signalName, signalInput: $signalInput}')
 
           # Send POST request
-          curl -X POST http://172.24.48.1:8080/trigger-signal \
+          curl -X POST http://localhost:8080/trigger-signal \
             -H "Content-Type: application/json" \
             -d "$body"
