@@ -60,7 +60,7 @@ jobs:
 
       - name: Wait for all pods in vcluster namespace to be ready
         run: |
-          sleep 60
+          sleep 40
           kubectl wait --for=condition=Ready pods --all -n $NAMESPACE_NAME --timeout=100s
 
       - name: Signal Temporal Workflow
@@ -74,6 +74,6 @@ jobs:
             '{workflowId: $workflowId, signalName: $signalName, signalInput: $signalInput}')
 
           # Send POST request
-          curl -X POST http://localhost:8080/trigger-signal \
+          curl -X POST http://172.24.48.1:8080/trigger-signal \
             -H "Content-Type: application/json" \
             -d "$body"
