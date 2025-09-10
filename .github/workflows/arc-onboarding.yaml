@@ -29,7 +29,7 @@ jobs:
       - name: Apply Azure Arc Namespaces and LimitRange
         run: |
           echo "Connecting to vCluster in background mode..."
-          vcluster connect "$CLUSTER_NAME" -n "$NAMESPACE_NAME" --background-proxy=false
+          vcluster connect "$CLUSTER_NAME" -n "$NAMESPACE_NAME" 
           echo "Applying arc-ns YAML..."
           kubectl --kubeconfig ~/.kube/config-vcluster_"$CLUSTER_NAME"_"$NAMESPACE_NAME" apply -f ./arc-ns
           echo "Namespace and LimitRange applied in vCluster."
