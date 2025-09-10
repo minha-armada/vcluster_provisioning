@@ -5,15 +5,15 @@ metadata:
   namespace: {{ .Values.namespace_name }}
 spec:
   controlPlaneRef:
-    apiGroup: infrastructure.cluster.x-k8s.io/v1alpha1  # corrected field name
+    apiGroup: infrastructure.cluster.x-k8s.io    # no version here
     kind: VCluster
     name: {{ .Values.cluster_name }}
   infrastructureRef:
-    apiGroup: infrastructure.cluster.x-k8s.io/v1alpha1 # corrected field name
+    apiGroup: infrastructure.cluster.x-k8s.io    # no version here
     kind: VCluster
     name: {{ .Values.cluster_name }}
 ---
-apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1  # version here
 kind: VCluster
 metadata:
   name: {{ .Values.cluster_name }}
