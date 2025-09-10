@@ -1,15 +1,15 @@
-apiVersion: cluster.x-k8s.io/v1beta1
+apiVersion: cluster.x-k8s.io/v1beta2
 kind: Cluster
 metadata:
   name: {{ .Values.cluster_name }}
   namespace: {{ .Values.namespace_name }}
 spec:
   controlPlaneRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    apiGroup: infrastructure.cluster.x-k8s.io/v1alpha1  # corrected field name
     kind: VCluster
     name: {{ .Values.cluster_name }}
   infrastructureRef:
-    apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
+    apiGroup: infrastructure.cluster.x-k8s.io/v1alpha1 # corrected field name
     kind: VCluster
     name: {{ .Values.cluster_name }}
 ---
@@ -52,4 +52,3 @@ spec:
             limits.cpu: {{ add .Values.cluster_cpu 200 | add 3000 }}m # required + 200m for controlPlane + 1770m for arc
             limits.memory: {{ add .Values.cluster_ram 2048 | add 4352 }}Mi # required + 2Gi for controlPlane + 4350Mi for arc
             requests.storage: {{ .Values.cluster_storage }}Gi
-      
