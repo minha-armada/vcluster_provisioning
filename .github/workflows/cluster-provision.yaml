@@ -61,7 +61,7 @@ jobs:
       - name: Wait for all pods in vcluster namespace to be ready
         run: |
           sleep 30
-          kubectl wait --for=condition=Ready pods --all -n $NAMESPACE_NAME --timeout=100s
+          kubectl wait --for=condition=Ready pods --all -n $NAMESPACE_NAME --timeout=60s
 
       - name: Signal Temporal Workflow
         if: success()
