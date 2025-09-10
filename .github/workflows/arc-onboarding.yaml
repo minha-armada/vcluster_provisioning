@@ -30,7 +30,7 @@ jobs:
         run: |
           echo "Applying azure-arc-namespace.yaml to vCluster..."
           vcluster connect "$CLUSTER_NAME" -n "$NAMESPACE_NAME" -- \
-            kubectl apply -f ./limitrange/azure-arc-namespace.yaml
+            kubectl apply -f ./arc-ns
           echo "Namespace and LimitRange applied in vCluster."
  
       - name: Create Resource Group in Azure (if not exists)
