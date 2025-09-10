@@ -25,13 +25,12 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4  
- 
+
       - name: Apply Azure Arc Namespaces and LimitRange
         run: |
-          echo "Connecting to vCluster in background mode..."
-          vcluster connect "$CLUSTER_NAME" -n "$NAMESPACE_NAME" 
-          echo "Applying arc-ns YAML..."
-          kubectl --kubeconfig ~/.kube/config-vcluster_"$CLUSTER_NAME"_"$NAMESPACE_NAME" apply -f ./arc-ns
+          echo "Applying azure-arc-namespace.yaml to vCluster..."
+          vcluster connect "$CLUSTER_NAME" -n "$NAMESPACE_NAME" -- \
+            kubectl apply -f ./arc-ns
           echo "Namespace and LimitRange applied in vCluster."
 
       - name: Create Resource Group in Azure (if not exists)
