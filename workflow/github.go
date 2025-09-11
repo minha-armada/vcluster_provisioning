@@ -39,6 +39,7 @@ func triggerGithubAction(ctx context.Context, actionName string, input VclusterI
 	inputs := map[string]string{
 		"cluster_name":   input.VclusterName,
 		"namespace_name": fmt.Sprintf("%s-ns", input.VclusterName),
+		"host_name":      input.HostName,
 		"cpu":            input.CPU,
 		"memory":         input.Memory,
 		"storage":        input.Storage,
@@ -52,6 +53,7 @@ func triggerGithubAction(ctx context.Context, actionName string, input VclusterI
 		inputs = map[string]string{
 			"cluster_name":   input.VclusterName,
 			"namespace_name": fmt.Sprintf("%s-ns", input.VclusterName),
+			"host-name":      input.HostName,
 			"cpu":            input.CPU,
 			"memory":         input.Memory,
 			"storage":        input.Storage,
@@ -61,7 +63,7 @@ func triggerGithubAction(ctx context.Context, actionName string, input VclusterI
 		}
 	case "arc-integration":
 		inputs = map[string]string{
-			"cluster_name":   input.VclusterName, // Corrected key name
+			"cluster_name":   input.VclusterName,
 			"namespace_name": fmt.Sprintf("vcluster-%s-ns", input.VclusterName),
 		}
 	}

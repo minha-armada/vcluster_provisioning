@@ -28,7 +28,7 @@ jobs:
 
       - name: Apply Azure Arc Namespaces and LimitRange
         run: |
-          echo "Applying azure-arc-namespace.yaml to vCluster..."
+          echo "Applying arc-ns.yaml to vCluster..."
           vcluster connect "$CLUSTER_NAME" -n "$NAMESPACE_NAME" -- \
             kubectl apply -f ./arc-ns
           echo "Namespace and LimitRange applied in vCluster."

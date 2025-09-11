@@ -9,6 +9,7 @@ import (
 type VclusterInput struct {
 	VclusterName  string
 	Namespace     string
+	HostName      string
 	CPU           string
 	Memory        string
 	Storage       string
