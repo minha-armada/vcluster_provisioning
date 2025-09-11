@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Create Vcluster using CAPI</title>
     <style>
         body {
@@ -81,34 +81,14 @@
         }
 
         .input-group {
-            display: flex;
-            align-items: center;
+            display: block; /* stack vertically */
             margin-bottom: 15px;
         }
 
         .input-group label {
-            flex-basis: 40%;
-            text-align: left;
-            margin: 0;
-        }
-
-        .input-group select {
-            flex-basis: 60%;
-            padding: 8px;
-            font-size: 16px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background-color: #f7f7f7;
-        }
-
-        .optional-label {
-            font-size: 12px;
-            color: #999;
-        }
-
-        .required {
-            color: red;
-            font-size: 12px;
+            display: block; /* label on its own line */
+            margin-bottom: 6px;
+            font-weight: bold;
         }
     </style>
 </head>
@@ -121,37 +101,48 @@
         <form action="/submit" method="POST">
             <div class="form-title">Specs</div>
 
-            <label for="vclusterName">Vcluster Name <span class="required">*</span></label>
-            <input type="text" id="vclusterName" name="vclusterName" required placeholder="e.g., vcluster-1">
+            <div class="input-group">
+                <label for="vclusterName">Vcluster Name <span class="required">*</span></label>
+                <input type="text" id="vclusterName" name="vclusterName" required placeholder="e.g., vcluster-1" />
+            </div>
 
-            <label for="hostName">Host Cluster Name <span class="required">*</span></label>
-            <select id="hostName" name="hostName" required>
-                <option value="">-- Select Host Cluster --</option>
-                <option value="leviathan-dev01">leviathan-dev01</option>
-            </select>
-   
-            <label for="k8sVersion">Kubernetes Version <span class="required">*</span></label>
-            <select id="k8sVersion" name="kubernetesVersion" required>
-                <option value="">-- Select K8s Version --</option>
-                <option value="1.26">1.28</option>
-                <option value="1.27">1.30</option>
-                <option value="1.28">1.32</option>
-                <option value="1.28">1.33</option>
-            </select>
+            <div class="input-group">
+                <label for="hostName">Host Cluster Name <span class="required">*</span></label>
+                <select id="hostName" name="hostName" required>
+                    <option value="">-- Select Host Cluster --</option>
+                    <option value="leviathan-dev01">leviathan-dev01</option>
+                </select>
+            </div>
 
-            <label for="cpu">CPU <span class="required">*</span></label>
-            <input type="text" id="cpu" name="cpu" required placeholder="">
+            <div class="input-group">
+                <label for="k8sVersion">Kubernetes Version <span class="required">*</span></label>
+                <select id="k8sVersion" name="kubernetesVersion" required>
+                    <option value="">-- Select K8s Version --</option>
+                    <option value="1.26">1.28</option>
+                    <option value="1.27">1.30</option>
+                    <option value="1.28">1.32</option>
+                    <option value="1.28">1.33</option>
+                </select>
+            </div>
 
-            <label for="memory">Memory <span class="required">*</span></label>
-            <input type="text" id="memory" name="memory" placeholder="">
+            <div class="input-group">
+                <label for="cpu">CPU <span class="required">*</span></label>
+                <input type="text" id="cpu" name="cpu" required placeholder="" />
+            </div>
 
-            <label for="storage">Storage <span class="required">*</span></label>
-            <input type="text" id="storage" name="storage" required placeholder="">
+            <div class="input-group">
+                <label for="memory">Memory <span class="required">*</span></label>
+                <input type="text" id="memory" name="memory" placeholder="" />
+            </div>
+
+            <div class="input-group">
+                <label for="storage">Storage <span class="required">*</span></label>
+                <input type="text" id="storage" name="storage" required placeholder="" />
+            </div>
 
             <button type="submit">Submit</button>
         </form>
-
-        </div>
+    </div>
 
 </body>
 </html>
