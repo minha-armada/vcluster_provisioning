@@ -12,7 +12,7 @@ on:
         description: Name of the host cluster to set the host context
         required: true
       kubernetes_version:
-        description: Kubernetes version to use in vCluster (e.g. 1.27, 1.28)
+        description: Kubernetes version to use in vCluster (e.g. 1.28, 1.32)
         required: true
         default: "1.28"
       cpu:
@@ -45,28 +45,31 @@ jobs:
         shell: bash
     env:
       NAMESPACE_NAME: vcluster-${{ github.event.inputs.namespace_name }}
-      HOST_CONTEXT: ${{ github.event.inputs.host_name }}
       CLUSTER_NAME: ${{ github.event.inputs.cluster_name }}
       KUBERNETES_VERSION: ${{ github.event.inputs.kubernetes_version }}
       CPU: ${{ github.event.inputs.cpu }}
       MEMORY: ${{ github.event.inputs.memory }}
       STORAGE: ${{ github.event.inputs.storage }}
+      KUBECONFIG_FILE: "admin/config_files/${{ github.event.inputs.host_name }}"
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Validate and switch kube context
+      - name: Set KUBECONFIG for target cluster
         run: |
-          echo "Validating and switching to context: $HOST_CONTEXT"
-          if ! kubectl config get-contexts -o name | grep -qx "$HOST_CONTEXT"; then
-            echo "Context '$HOST_CONTEXT' not found in kubeconfig."
-            echo "Available contexts:"
-            kubectl config get-contexts -o name
-            exit 1
-          fi
+          echo "Setting KUBECONFIG to: $KUBECONFIG_FILE"
+          export KUBECONFIG="$KUBECONFIG_FILE"
 
-          kubectl config use-context "$HOST_CONTEXT"
-          echo "Switched to context: $(kubectl config current-context)"
+          echo "Verifying cluster connection..."
+          kubectl cluster-info --request-timeout=10s
+         
+          echo "Current context:"
+          kubectl config current-context
+         
+          echo "Available nodes:"
+          kubectl get nodes --request-timeout=10s
+
+          echo "KUBECONFIG=$KUBECONFIG_FILE" >> $GITHUB_ENV
 
       - name: Create vCluster with resource limits
         run: |
