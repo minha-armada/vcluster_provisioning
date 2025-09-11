@@ -65,12 +65,12 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	}
 
 	vclusterName := r.FormValue("vclusterName")
-	hostClusterName := r.FormValue("hostClusterName")
+	hostName := r.FormValue("hostName")
 	cpu := r.FormValue("cpu")
 	memory := r.FormValue("memory")
 	storage := r.FormValue("storage")
 
-	if vclusterName == "" || hostClusterName == "" || cpu == "" || memory == "" || storage == "" {
+	if vclusterName == "" || hostName == "" || cpu == "" || memory == "" || storage == "" {
 		http.Error(w, "Missing required parameters", http.StatusBadRequest)
 		return
 	}
@@ -81,7 +81,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	workflowInput := workflow.VclusterInput{
 		VclusterName: vclusterName,
 		Namespace:    namespace,
-		HostName:     hostClusterName,
+		HostName:     hostName,
 		CPU:          cpu,
 		Memory:       memory,
 		Storage:      storage,
