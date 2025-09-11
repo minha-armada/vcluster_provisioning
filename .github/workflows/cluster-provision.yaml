@@ -50,7 +50,7 @@ jobs:
       CPU: ${{ github.event.inputs.cpu }}
       MEMORY: ${{ github.event.inputs.memory }}
       STORAGE: ${{ github.event.inputs.storage }}
-      KUBECONFIG_FILE: "${{ github.workspace }}/admin/config_files/${{ github.event.inputs.host_name }}.config"
+      KUBECONFIG_FILE: "/home/minha/admin/config_files/${{ github.event.inputs.host_name }}.config"
       
     steps:
       - name: Checkout code
