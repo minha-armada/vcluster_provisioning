@@ -28,6 +28,7 @@ spec:
       repo: https://charts.loft.sh
       version: {{ .Values.vcluster_version }}
     values: |-
+      kubernetesVersion: "{{ .Values.kubernetes_version }}"
       sync:
         fromHost:
           nodes:

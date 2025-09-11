@@ -123,9 +123,21 @@
 
             <label for="vclusterName">Vcluster Name <span class="required">*</span></label>
             <input type="text" id="vclusterName" name="vclusterName" required placeholder="e.g., vcluster-1">
-   
+
             <label for="hostName">Host Cluster Name <span class="required">*</span></label>
-            <input type="text" id="hostName" name="hostName" required placeholder="e.g., leviathan-dev01">
+            <select id="hostName" name="hostName" required>
+                <option value="">-- Select Host Cluster --</option>
+                <option value="leviathan-dev01">leviathan-dev01</option>
+            </select>
+   
+            <label for="k8sVersion">Kubernetes Version <span class="required">*</span></label>
+            <select id="k8sVersion" name="kubernetesVersion" required>
+                <option value="">-- Select K8s Version --</option>
+                <option value="1.26">1.28</option>
+                <option value="1.27">1.30</option>
+                <option value="1.28">1.32</option>
+                <option value="1.28">1.33</option>
+            </select>
 
             <label for="cpu">CPU <span class="required">*</span></label>
             <input type="text" id="cpu" name="cpu" required placeholder="">

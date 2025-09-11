@@ -1,6 +1,7 @@
 cluster_name: ""
 namespace_name: ""
 vcluster_version: 0.28.0
+kubernetes_version: "1.32"
 cluster_cpu: 500
 cluster_ram: 512
 cluster_storage: 10
