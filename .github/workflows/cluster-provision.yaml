@@ -44,32 +44,55 @@ jobs:
       run:
         shell: bash
     env:
-      NAMESPACE_NAME: vcluster-${{ github.event.inputs.namespace_name }}
+      NAMESPACE_NAME: ${{ github.event.inputs.namespace_name }}
       CLUSTER_NAME: ${{ github.event.inputs.cluster_name }}
       KUBERNETES_VERSION: ${{ github.event.inputs.kubernetes_version }}
       CPU: ${{ github.event.inputs.cpu }}
       MEMORY: ${{ github.event.inputs.memory }}
       STORAGE: ${{ github.event.inputs.storage }}
-      KUBECONFIG_FILE: "admin/config_files/${{ github.event.inputs.host_name }}"
+      KUBECONFIG_FILE: "${{ github.workspace }}/admin/config_files/${{ github.event.inputs.host_name }}.config"
+      
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Verify kubeconfig file exists
+        run: |
+          if [ ! -f "$KUBECONFIG_FILE" ]; then
+            echo "ERROR: Kubeconfig file not found at: $KUBECONFIG_FILE"
+            echo "Available files in admin/config_files/:"
+            ls -la admin/config_files/ || echo "Directory does not exist"
+            exit 1
+          fi
+          echo "Kubeconfig file found: $KUBECONFIG_FILE"
+      
       - name: Set KUBECONFIG for target cluster
         run: |
           echo "Setting KUBECONFIG to: $KUBECONFIG_FILE"
           export KUBECONFIG="$KUBECONFIG_FILE"
 
+          # Verify cluster connection
           echo "Verifying cluster connection..."
           kubectl cluster-info --request-timeout=10s
-         
+
           echo "Current context:"
           kubectl config current-context
-         
+
           echo "Available nodes:"
           kubectl get nodes --request-timeout=10s
 
+          # Make KUBECONFIG available for subsequent steps
           echo "KUBECONFIG=$KUBECONFIG_FILE" >> $GITHUB_ENV
+
+      - name: Create namespace if it doesn't exist
+        run: |
+          echo "Checking if namespace '$NAMESPACE_NAME' exists..."
+          if ! kubectl get namespace "$NAMESPACE_NAME" >/dev/null 2>&1; then
+            echo "Creating namespace: $NAMESPACE_NAME"
+            kubectl create namespace "$NAMESPACE_NAME"
+          else
+            echo "Namespace '$NAMESPACE_NAME' already exists"
+          fi
 
       - name: Create vCluster with resource limits
         run: |
@@ -87,10 +110,9 @@ jobs:
         run: |
           echo "Waiting for pods to appear in namespace: $NAMESPACE_NAME..."
 
-          # Wait for at least one pod to be created (timeout after 60s)
           for i in {1..30}; do
             pod_count=$(kubectl get pods -n "$NAMESPACE_NAME" --no-headers 2>/dev/null | wc -l)
-            if [ "$pod_count" -gt 0 ]; then
+            if [ "$pod_count" -ge 2 ]; then
               echo "$pod_count pod(s) found. Proceeding to check readiness..."
               break
             fi

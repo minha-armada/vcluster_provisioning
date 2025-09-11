@@ -75,7 +75,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	namespace := fmt.Sprintf("%s-ns", vclusterName)
+	namespace := fmt.Sprintf("vcluster-%s-ns", vclusterName)
 	workflowID := fmt.Sprintf("vcluster-workflow-%s", vclusterName)
 
 	workflowInput := workflow.VclusterInput{
