@@ -38,7 +38,7 @@ func triggerGithubAction(ctx context.Context, actionName string, input VclusterI
 
 	inputs := map[string]string{
 		"cluster_name":   input.VclusterName,
-		"namespace_name": fmt.Sprintf("%s-ns", input.VclusterName),
+		"namespace_name": fmt.Sprintf("vcluster-%s-ns", input.VclusterName),
 		"host_name":      input.HostName,
 		"cpu":            input.CPU,
 		"memory":         input.Memory,
@@ -52,7 +52,7 @@ func triggerGithubAction(ctx context.Context, actionName string, input VclusterI
 	case "create":
 		inputs = map[string]string{
 			"cluster_name":   input.VclusterName,
-			"namespace_name": fmt.Sprintf("%s-ns", input.VclusterName),
+			"namespace_name": fmt.Sprintf("vcluster-%s-ns", input.VclusterName),
 			"host_name":      input.HostName,
 			"cpu":            input.CPU,
 			"memory":         input.Memory,
