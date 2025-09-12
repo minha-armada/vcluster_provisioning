@@ -19,29 +19,19 @@ metadata:
   name: {{ .Values.cluster_name }}
   namespace: {{ .Values.namespace_name }}
 spec:
-  # This is indentation level 1
   helmRelease:
-    # This is indentation level 2
     chart:
       name: vcluster
       repo: https://charts.loft.sh
       version: {{ .Values.vcluster_version }}
-    # This is indentation level 2
     values: |-
       # The content below must be at indentation level 3
       sync:
         fromHost:
           nodes:
             enabled: true
-      distro:
-        k8s:
-          enabled: false
-          version: ""
-          imagePullPolicy: ""
-          image:
-            registry: ghcr.io
-            repository: "loft-sh/kubernetes"
-            tag: {{ .Values.kubernetes_version }}
+      k8s:
+        version: {{ .Values.kubernetes_version }}
       controlPlane:
         statefulSet:
           resources:
