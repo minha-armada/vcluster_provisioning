@@ -13,21 +13,22 @@ spec:
     kind: VCluster
     name: {{ .Values.cluster_name }}
 ---
-apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1  # version here
+apiVersion: infrastructure.cluster.x-k8s.io/v1alpha1
 kind: VCluster
 metadata:
   name: {{ .Values.cluster_name }}
   namespace: {{ .Values.namespace_name }}
 spec:
-  # controlPlaneEndpoint:
-  #   host: ""
-  #   port: 0
+  # This is indentation level 1
   helmRelease:
+    # This is indentation level 2
     chart:
       name: vcluster
       repo: https://charts.loft.sh
       version: {{ .Values.vcluster_version }}
+    # This is indentation level 2
     values: |-
+      # The content below must be at indentation level 3
       sync:
         fromHost:
           nodes:
@@ -35,12 +36,12 @@ spec:
       distro:
         k8s:
           enabled: false
-            version: ""
-            imagePullPolicy: ""
-            image:
-              registry: ghcr.io
-              repository: "loft-sh/kubernetes"
-              tag: {{ .Values.kubernetes_version }}
+          version: ""
+          imagePullPolicy: ""
+          image:
+            registry: ghcr.io
+            repository: "loft-sh/kubernetes"
+            tag: {{ .Values.kubernetes_version }}
       controlPlane:
         statefulSet:
           resources:
@@ -56,8 +57,8 @@ spec:
         resourceQuota:
           enabled: true
           quota:
-            requests.cpu: {{ add .Values.cluster_cpu 200 | add 1000 }}m # required + 200m for controlPlane + 550m for arc
-            requests.memory: {{ add .Values.cluster_ram 256 | add 1536 }}Mi # required in Mi + 256Mi for controlPlane + 1393Mi for arc
-            limits.cpu: {{ add .Values.cluster_cpu 200 | add 3000 }}m # required + 200m for controlPlane + 1770m for arc
-            limits.memory: {{ add .Values.cluster_ram 2048 | add 4352 }}Mi # required + 2Gi for controlPlane + 4350Mi for arc
+            requests.cpu: {{ add .Values.cluster_cpu 200 | add 1000 }}m
+            requests.memory: {{ add .Values.cluster_ram 256 | add 1536 }}Mi
+            limits.cpu: {{ add .Values.cluster_cpu 200 | add 3000 }}m
+            limits.memory: {{ add .Values.cluster_ram 2048 | add 4352 }}Mi
             requests.storage: {{ .Values.cluster_storage }}Gi
