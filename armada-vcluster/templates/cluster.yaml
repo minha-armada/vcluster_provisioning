@@ -25,14 +25,20 @@ spec:
       repo: https://charts.loft.sh
       version: {{ .Values.vcluster_version }}
     values: |-
-      # The content below must be at indentation level 3
       sync:
         fromHost:
           nodes:
             enabled: true
-      k8s:
-        version: {{ .Values.kubernetes_version }}
       controlPlane:
+        distro:
+          k8s:
+            enabled: false
+            version: ""
+            imagePullPolicy: ""
+            image:
+              registry: ghcr.io
+              repository: "loft-sh/kubernetes"
+              tag: {{ .Values.kubernetes_version }}
         statefulSet:
           resources:
             limits:
