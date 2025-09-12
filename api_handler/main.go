@@ -88,7 +88,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		VclusterName:  vclusterName,
 		Namespace:     namespace,
 		HostName:      hostName,
-		k8sVersion:    k8s_version,
+		K8sVersion:    k8s_version,
 		CPU:           cpu,
 		Memory:        memory,
 		Storage:       storage,

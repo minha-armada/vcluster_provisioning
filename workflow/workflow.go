@@ -10,7 +10,7 @@ type VclusterInput struct {
 	VclusterName  string
 	Namespace     string
 	HostName      string
-	k8sVersion    string
+	K8sVersion    string
 	CPU           string
 	Memory        string
 	Storage       string

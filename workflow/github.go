@@ -43,7 +43,7 @@ func triggerGithubAction(ctx context.Context, actionName string, input VclusterI
 			"cluster_name":       input.VclusterName,
 			"namespace_name":     fmt.Sprintf("vcluster-%s-ns", input.VclusterName),
 			"host_name":          input.HostName,
-			"kubernetes_version": input.k8sVersion,
+			"kubernetes_version": input.K8sVersion,
 			"cpu":                input.CPU,
 			"memory":             input.Memory,
 			"storage":            input.Storage,
