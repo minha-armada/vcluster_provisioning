@@ -32,11 +32,8 @@ spec:
         fromHost:
           nodes:
             enabled: true
-      distro:
-        k8s:
-          enabled: true
-          image:
-              tag: "{{ .Values.kubernetes_version }}"
+      vcluster:
+        kubernetesVersion: {{ trimPrefix "v" .Values.kubernetes_version }}
       controlPlane:
         statefulSet:
           resources:
