@@ -84,17 +84,6 @@ jobs:
           # Make KUBECONFIG available for subsequent steps
           echo "KUBECONFIG=$KUBECONFIG_FILE" >> $GITHUB_ENV
 
-      - name: Create namespace if it doesn't exist
-        run: |
-          echo "Checking if namespace '$NAMESPACE_NAME' exists..."
-          if ! kubectl get namespace "$NAMESPACE_NAME" >/dev/null 2>&1; then
-            echo "Creating namespace: $NAMESPACE_NAME"
-            kubectl create namespace "$NAMESPACE_NAME"
-            sleep 5
-          else
-            echo "Namespace '$NAMESPACE_NAME' already exists"
-          fi
-          
       - name: Create vCluster with resource limits
         run: |
           helm upgrade --install "$CLUSTER_NAME" \
