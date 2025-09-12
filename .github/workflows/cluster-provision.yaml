@@ -110,14 +110,14 @@ jobs:
         run: |
           echo "Waiting for pods to appear in namespace: $NAMESPACE_NAME..."
           # Wait for at least one pod to be created (timeout after 60s)
-          for i in {1..30}; do
+          for i in {1..10}; do
             pod_count=$(kubectl get pods -n "$NAMESPACE_NAME" --no-headers 2>/dev/null | wc -l)
             if [ "$pod_count" -gt 0 ]; then
               echo "$pod_count pod(s) found. Proceeding to check readiness..."
               break
             fi
-            echo "No pods found yet. Retrying in 2s..."
-            sleep 2
+            echo "No pods found yet. Retrying in 10s..."
+            sleep 10
           done
           kubectl wait --for=condition=Ready pods --all -n "$NAMESPACE_NAME" --timeout=120s
 
