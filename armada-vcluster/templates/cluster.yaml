@@ -32,8 +32,15 @@ spec:
         fromHost:
           nodes:
             enabled: true
-      vcluster:
-        kubernetesVersion: {{ trimPrefix "v" .Values.kubernetes_version }}
+      distro:
+        k8s:
+          enabled: false
+            version: ""
+            imagePullPolicy: ""
+            image:
+              registry: ghcr.io
+              repository: "loft-sh/kubernetes"
+              tag: {{ .Values.kubernetes_version }}
       controlPlane:
         statefulSet:
           resources:
