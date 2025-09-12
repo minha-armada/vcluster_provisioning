@@ -66,6 +66,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 
 	vclusterName := r.FormValue("vclusterName")
 	hostName := r.FormValue("hostName")
+	k8s_version := r.FormValue("k8sVersion")
 	cpu := r.FormValue("cpu")
 	memory := r.FormValue("memory")
 	storage := r.FormValue("storage")
@@ -75,7 +76,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		arcOnboarding = true
 	}
 
-	if vclusterName == "" || hostName == "" || cpu == "" || memory == "" || storage == "" {
+	if vclusterName == "" || hostName == "" || k8s_version == "" || cpu == "" || memory == "" || storage == "" {
 		http.Error(w, "Missing required parameters", http.StatusBadRequest)
 		return
 	}
@@ -87,6 +88,7 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 		VclusterName:  vclusterName,
 		Namespace:     namespace,
 		HostName:      hostName,
+		k8sVersion:    k8s_version,
 		CPU:           cpu,
 		Memory:        memory,
 		Storage:       storage,

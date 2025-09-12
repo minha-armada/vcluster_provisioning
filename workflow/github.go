@@ -36,36 +36,28 @@ func triggerGithubAction(ctx context.Context, actionName string, input VclusterI
 		repoOwner, repoName, workflowFile,
 	)
 
-	inputs := map[string]string{
-		"cluster_name":   input.VclusterName,
-		"namespace_name": fmt.Sprintf("vcluster-%s-ns", input.VclusterName),
-		"host_name":      input.HostName,
-		"cpu":            input.CPU,
-		"memory":         input.Memory,
-		"storage":        input.Storage,
-		"workflow_id":    input.WorkflowID,
-		"signal_name":    "vcluster-created",
-		"signal_payload": "done",
-	}
-
+	var inputs map[string]string
 	switch actionName {
 	case "create":
 		inputs = map[string]string{
-			"cluster_name":   input.VclusterName,
-			"namespace_name": fmt.Sprintf("vcluster-%s-ns", input.VclusterName),
-			"host_name":      input.HostName,
-			"cpu":            input.CPU,
-			"memory":         input.Memory,
-			"storage":        input.Storage,
-			"workflow_id":    input.WorkflowID,
-			"signal_name":    "vcluster-created",
-			"signal_payload": "done",
+			"cluster_name":       input.VclusterName,
+			"namespace_name":     fmt.Sprintf("vcluster-%s-ns", input.VclusterName),
+			"host_name":          input.HostName,
+			"kubernetes_version": input.k8sVersion,
+			"cpu":                input.CPU,
+			"memory":             input.Memory,
+			"storage":            input.Storage,
+			"workflow_id":        input.WorkflowID,
+			"signal_name":        "vcluster-created",
+			"signal_payload":     "done",
 		}
 	case "arc-integration":
 		inputs = map[string]string{
 			"cluster_name":   input.VclusterName,
 			"namespace_name": fmt.Sprintf("vcluster-%s-ns", input.VclusterName),
 		}
+	default:
+		return fmt.Errorf("unknown actionName: %s", actionName)
 	}
 
 	payloadObj := map[string]interface{}{
