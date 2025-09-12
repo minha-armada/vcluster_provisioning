@@ -69,6 +69,11 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	cpu := r.FormValue("cpu")
 	memory := r.FormValue("memory")
 	storage := r.FormValue("storage")
+	arcOnboardingStr := r.FormValue("arcOnboarding")
+	arcOnboarding := false
+	if arcOnboardingStr == "yes" {
+		arcOnboarding = true
+	}
 
 	if vclusterName == "" || hostName == "" || cpu == "" || memory == "" || storage == "" {
 		http.Error(w, "Missing required parameters", http.StatusBadRequest)
@@ -79,13 +84,14 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	workflowID := fmt.Sprintf("vcluster-workflow-%s", vclusterName)
 
 	workflowInput := workflow.VclusterInput{
-		VclusterName: vclusterName,
-		Namespace:    namespace,
-		HostName:     hostName,
-		CPU:          cpu,
-		Memory:       memory,
-		Storage:      storage,
-		WorkflowID:   workflowID,
+		VclusterName:  vclusterName,
+		Namespace:     namespace,
+		HostName:      hostName,
+		CPU:           cpu,
+		Memory:        memory,
+		Storage:       storage,
+		WorkflowID:    workflowID,
+		ArcOnboarding: arcOnboarding,
 	}
 
 	workflowOptions := client.StartWorkflowOptions{

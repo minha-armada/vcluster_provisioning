@@ -16,6 +16,8 @@ type VclusterInput struct {
 	WorkflowID    string
 	SignalName    string
 	SignalPayload string
+
+	ArcOnboarding bool
 }
 
 func CreateVclusterWorkflow(ctx workflow.Context, input VclusterInput) (string, error) {
@@ -60,10 +62,15 @@ func CreateVclusterWorkflow(ctx workflow.Context, input VclusterInput) (string, 
 
 	logger.Info("Received signal from GitHub:", "payload", signalPayload)
 
-	//trigger azure arc onboarding
-	if err := workflow.ExecuteActivity(ctx, OnboardAzureArcActivity, input).Get(ctx, nil); err != nil {
-		logger.Error("OnboardAzureArcActivity failed", "error", err)
-		return "", err
+	//conditionally trigger azure arc onboarding
+	if input.ArcOnboarding {
+		if err := workflow.ExecuteActivity(ctx, OnboardAzureArcActivity, input).Get(ctx, nil); err != nil {
+			logger.Error("OnboardAzureArcActivity failed", "error", err)
+			return "", err
+		}
+		logger.Info("Azure Arc onboarding completed")
+	} else {
+		logger.Info("Skipping Azure Arc onboarding as per user selection")
 	}
 
 	return "vCluster creation and Azure Arc onboarding completed", nil
