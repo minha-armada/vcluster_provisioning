@@ -94,14 +94,14 @@ jobs:
           else
             echo "Namespace '$NAMESPACE_NAME' already exists"
           fi
-
+          
       - name: Create vCluster with resource limits
         run: |
           helm upgrade --install "$CLUSTER_NAME" \
           --create-namespace \
           --set cluster_name="$CLUSTER_NAME" \
           --set namespace_name="$NAMESPACE_NAME" \
-          --set kubernetes_version="$KUBERNETES_VERSION" \
+          --set kubernetes_version=$KUBERNETES_VERSION \
           --set cluster_cpu="$CPU" \
           --set cluster_ram="$MEMORY" \
           --set cluster_storage="$STORAGE" \
